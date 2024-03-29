@@ -67,12 +67,25 @@ def calculate_fitness(selected_board):
 
     return conflicts
 
+def select_best_boards(boards):
+    #Obtiene la aptitud de cada tablero
+    fitness_boards = [(calculate_fitness(board), board) for board in boards]
+    #Se combinan los tableros con su aptitud correspondiente
+    boards_with_fitness = list(zip(fitness_boards, boards))
+    #Se ordenan los tableros por aptitud de menor a mayor
+    boards_with_fitness.sort(key=lambda x: x[0])
+    # Se obtienen los padres que son los dos primeros tableros con menos choques
+    parents = [board[1] for board in boards_with_fitness[:2]]  # Solo devuelve los tableros
+    # Regreso los padres
+    return parents
+
 def main():
     size_board = 8
     num_boards = 100
     boards = create_boards(size_board, num_boards)
     selectBoards = select_random_boards(boards)
-    for i, board in enumerate(selectBoards):
+    bestBoards = select_best_boards(selectBoards)
+    for i, board in enumerate(bestBoards):
         print(f"Tablero {i+1}:")
         for row in board:
             print(' '.join(str(cell) for cell in row))
